@@ -2,41 +2,65 @@ package main
 
 import (
 	"embed"
+	"io/fs"
+	"log"
+	"net/http"
+	"os"
+	"strings"
 
-	"github.com/wailsapp/wails/v2"
-	"github.com/wailsapp/wails/v2/pkg/options"
-	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
-
+	"POS/backend/api"
 	"POS/backend/database/sqlite"
 )
 
-
 //go:embed all:frontend/dist
-var assets embed.FS
+var frontendAssets embed.FS
+
+type spaFS struct {
+	sub fs.FS
+}
+
+func (s *spaFS) Open(name string) (fs.File, error) {
+	f, err := s.sub.Open(name)
+	if err != nil {
+		return s.sub.Open("index.html")
+	}
+	return f, nil
+}
 
 func main() {
-	// Init Database
 	sqlite.Init()
+	api.SeedDefaultAdmin()
 
-	// Create an instance of the app structure
-	app := NewApp()
+	apiRouter := api.NewRouter()
 
-	// Create application with options
-	err := wails.Run(&options.App{
-		Title:  "ActioLift",
-		Width:  1024,
-		Height: 768,
-		AssetServer: &assetserver.Options{
-			Assets: assets,
-		},
-		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup:        app.startup,
-		Bind: []interface{}{
-			app,
-		},
+	var staticFS http.Handler
+	if _, err := os.Stat("frontend/dist"); err == nil {
+		sub, err := fs.Sub(frontendAssets, "frontend/dist")
+		if err != nil {
+			log.Fatal("Error al leer assets:", err)
+		}
+		staticFS = http.FileServer(http.FS(&spaFS{sub: sub}))
+	}
+
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/api/") {
+			apiRouter.ServeHTTP(w, r)
+			return
+		}
+		if staticFS != nil {
+			staticFS.ServeHTTP(w, r)
+		} else {
+			apiRouter.ServeHTTP(w, r)
+		}
 	})
 
-	if err != nil {
-		println("Error:", err.Error())
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	addr := ":" + port
+	log.Printf("Servidor iniciado en puerto %s", port)
+	if err := http.ListenAndServe(addr, handler); err != nil {
+		log.Fatal("Error al iniciar servidor:", err)
 	}
 }

@@ -10,7 +10,7 @@ type Membership struct {
 	Description string
 	Price       float64        `gorm:"not null"`
 	Duration    int            `gorm:"not null"`
-	CreatedAt   time.Time
+	CreatedAt   time.Time      `gorm:"index:idx_membership_created_at"`
 	UpdatedAt   time.Time
 
 	Subscriptions []Subscription `gorm:"foreignKey:MembershipID"`

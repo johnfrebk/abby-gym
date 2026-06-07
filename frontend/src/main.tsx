@@ -1,5 +1,11 @@
 import { render } from 'preact';
 import App from './App.tsx';
+import { AuthProvider } from './contexts/AuthContext.tsx';
 import './index.css';
 
-render(<App />, document.getElementById('root')!);
+render(
+  <AuthProvider>
+    <App />
+  </AuthProvider>,
+  document.getElementById('root')!
+);

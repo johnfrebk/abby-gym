@@ -3,7 +3,7 @@ export interface Client {
   id?: number;
   first_name: string;
   last_name: string;
-  dni: string;
+  documento: string;
   email: string;
   phone: string;
   registration_date?: string;
@@ -32,6 +32,7 @@ export interface SalesDetail {
   id?: number;
   sale_id: number;
   product_id: number;
+  product_name?: string;
   quantity: number;
   price: number;
 }
@@ -91,7 +92,7 @@ export interface Activity {
 export interface ClientForm {
   first_name: string;
   last_name: string;
-  dni: string;
+  documento: string;
   email: string;
   phone: string;
 }
@@ -99,7 +100,7 @@ export interface ClientForm {
 export interface UpdateClientForm {
   first_name: string;
   last_name: string;
-  dni: string;
+  documento: string;
   email: string;
   phone: string;
 }
@@ -121,6 +122,7 @@ export interface SalesDetailForm {
   product_id: number;
   quantity: number;
   price: number;
+  product_name?: string;
 }
 
 export interface SubscriptionForm {
@@ -141,4 +143,12 @@ export interface AttendanceForm {
   client_id: number;
   date: string;
   check_in_time: string;
+}
+
+export interface PaginatedResult {
+  data: any[];
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
 }

@@ -9,26 +9,23 @@ import (
 	"POS/backend/features/clients/update_client"
 	"POS/backend/features/dashboard/get_activities"
 	"POS/backend/features/dashboard/get_dashboard"
-
-	"POS/backend/features/products/delete_product"
-	"POS/backend/features/products/get_products"
-	"POS/backend/features/products/save_product"
-	"POS/backend/features/products/update_product"
-
 	"POS/backend/features/memberships/delete_membership"
 	"POS/backend/features/memberships/get_memberships"
 	"POS/backend/features/memberships/save_membership"
 	"POS/backend/features/memberships/update_membership"
-
-	"POS/backend/features/subscriptions/delete_subscription"
-	"POS/backend/features/subscriptions/get_subscriptions"
-	"POS/backend/features/subscriptions/save_subscription"
-	"POS/backend/features/subscriptions/update_subscription"
-
+	"POS/backend/features/products/delete_product"
+	"POS/backend/features/products/get_products"
+	"POS/backend/features/products/save_product"
+	"POS/backend/features/products/update_product"
 	"POS/backend/features/sales/delete_sale"
 	"POS/backend/features/sales/get_sales"
 	"POS/backend/features/sales/save_sale"
 	"POS/backend/features/sales/update_sale"
+	"POS/backend/features/subscriptions/delete_subscription"
+	"POS/backend/features/subscriptions/get_subscriptions"
+	"POS/backend/features/subscriptions/save_subscription"
+	"POS/backend/features/subscriptions/update_subscription"
+	"POS/backend/utils"
 )
 
 // App struct
@@ -55,6 +52,10 @@ func (a *App) SaveClient(req save_client.SaveClientRequest) error {
 
 func (a *App) GetAllClients() ([]get_clients.ClientResponse, error) {
 	return get_clients.NewGetClientsHandler().Handle()
+}
+
+func (a *App) GetAllClientsPaginated(page int, pageSize int) (*utils.PaginatedResult, error) {
+	return get_clients.NewGetClientsHandler().HandlePaginated(page, pageSize)
 }
 
 func (a *App) GetClientByID(q get_client_by_id.GetClientByIDQuery) (get_client_by_id.ClientResponse, error) {

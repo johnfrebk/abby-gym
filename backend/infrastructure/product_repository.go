@@ -14,11 +14,15 @@ func NewProductRepository(db *gorm.DB) *ProductRepository {
     return &ProductRepository{db: db}
 }
 
-func (r *ProductRepository) ValidateStock(id string, quantity int) error {
+func (r *ProductRepository) UseDB(db *gorm.DB) {
+	r.db = db
+}
+
+func (r *ProductRepository) ValidateStock(id uint, quantity int) error {
 	var product models.Product
 	var domainProduct domain.Product
 
-	if err := r.db.First(&product, "id = ?", id).Error; err != nil {
+	if err := r.db.First(&product, id).Error; err != nil {
 		return err
 	}
 	
@@ -31,18 +35,18 @@ func (r *ProductRepository) ValidateStock(id string, quantity int) error {
 	return domainProduct.ValidateStock(quantity)
 }
 
-func (r *ProductRepository) DecreaseStock(id string, quantity int) error {
+func (r *ProductRepository) DecreaseStock(id uint, quantity int) error {
     var product models.Product
-    if err := r.db.First(&product, "id = ?", id).Error; err != nil {
+    if err := r.db.First(&product, id).Error; err != nil {
         return err
     }
     product.Stock -= quantity
     return r.db.Save(&product).Error
 }
 
-func (r *ProductRepository) IncreaseStock(id string, quantity int) error {
+func (r *ProductRepository) IncreaseStock(id uint, quantity int) error {
     var product models.Product
-    if err := r.db.First(&product, "id = ?", id).Error; err != nil {
+    if err := r.db.First(&product, id).Error; err != nil {
         return err
     }
     product.Stock += quantity

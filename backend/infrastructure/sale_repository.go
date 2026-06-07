@@ -14,57 +14,36 @@ func NewSaleRepository(db *gorm.DB) *SaleRepository {
 	return &SaleRepository{db: db}
 }
 
-func (r *SaleRepository) SaveSale(sale *domain.Sale) (uint, error) {
-	tx := r.db.Begin()
+func (r *SaleRepository) UseDB(db *gorm.DB) {
+	r.db = db
+}
 
+func (r *SaleRepository) SaveSale(sale *domain.Sale) (uint, error) {
 	var saleORM models.Sale
 	saleORM.ClientID = uint(sale.ClientID)
 
-	if err := tx.Create(&saleORM).Error; err != nil {
-		tx.Rollback()
+	if err := r.db.Create(&saleORM).Error; err != nil {
 		return 0, err
 	}
 	saleORM.Total = sale.Total
 
-	if err := tx.Save(&saleORM).Error; err != nil {
-		tx.Rollback()
+	if err := r.db.Save(&saleORM).Error; err != nil {
 		return 0, err
 	}
 
-	return saleORM.ID, tx.Commit().Error
+	return saleORM.ID, nil
 }
 
 func (r *SaleRepository) SaveSaleDetails(details []models.SalesDetail) error {
-	tx := r.db.Begin()
-
-	if err := tx.Create(details).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	return tx.Commit().Error
+	return r.db.Create(details).Error
 }
 
 func (r *SaleRepository) UpdateSale(sale *models.Sale) error {
-	tx := r.db.Begin()
-
-	if err := tx.Save(sale).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	return tx.Commit().Error
+	return r.db.Save(sale).Error
 }
 
 func (r *SaleRepository) UpdateSaleDetails(details []models.SalesDetail) error {
-	tx := r.db.Begin()
-
-	if err := tx.Create(details).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	return tx.Commit().Error
+	return r.db.Create(details).Error
 }
 
 func (r *SaleRepository) GetSaleDetails(saleID uint) ([]models.SalesDetail, error) {
@@ -76,12 +55,5 @@ func (r *SaleRepository) GetSaleDetails(saleID uint) ([]models.SalesDetail, erro
 }
 
 func (r *SaleRepository) DeleteSaleDetails(saleID uint) error {
-	tx := r.db.Begin()
-
-	if err := tx.Where("sale_id = ?", saleID).Delete(&models.SalesDetail{}).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	return tx.Commit().Error
+	return r.db.Where("sale_id = ?", saleID).Delete(&models.SalesDetail{}).Error
 }

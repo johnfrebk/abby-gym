@@ -19,7 +19,7 @@ export default function ClientForm({ client, onClose, onSuccess }: ClientFormPro
   const [formData, setFormData] = useState<ClientFormType>({
     first_name: client?.first_name || '',
     last_name: client?.last_name || '',
-    dni: client?.dni || '',
+    documento: client?.documento || '',
     email: client?.email || '',
     phone: client?.phone || '',
   });
@@ -118,19 +118,19 @@ export default function ClientForm({ client, onClose, onSuccess }: ClientFormPro
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              DNI
+              Documento
             </label>
             <input
               type="text"
-              value={formData.dni}
-              onChange={(e) => handleChange('dni', (e.target as HTMLInputElement).value)}
+              value={formData.documento}
+              onChange={(e) => handleChange('documento', (e.target as HTMLInputElement).value)}
               className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.dni ? 'border-red-500' : 'border-gray-300'
+                errors.documento ? 'border-red-500' : 'border-gray-300'
               }`}
-              placeholder="Ingrese el DNI (Opcional)"
+              placeholder="Ingrese el Documento (Opcional)"
             />
-            {errors.dni && (
-              <p className="text-sm text-red-600 mt-1">{errors.dni}</p>
+            {errors.documento && (
+              <p className="text-sm text-red-600 mt-1">{errors.documento}</p>
             )}
           </div>
 

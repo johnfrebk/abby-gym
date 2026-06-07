@@ -5,13 +5,13 @@
 !include "FileFunc.nsh"
 
 !ifndef INFO_PROJECTNAME
-    !define INFO_PROJECTNAME "ActioLift"
+    !define INFO_PROJECTNAME "AbbyGym"
 !endif
 !ifndef INFO_COMPANYNAME
-    !define INFO_COMPANYNAME "ActioLift"
+    !define INFO_COMPANYNAME "AbbyGym"
 !endif
 !ifndef INFO_PRODUCTNAME
-    !define INFO_PRODUCTNAME "ActioLift"
+    !define INFO_PRODUCTNAME "AbbyGym"
 !endif
 !ifndef INFO_PRODUCTVERSION
     !define INFO_PRODUCTVERSION "1.0.0"

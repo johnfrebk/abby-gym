@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'preact/hooks';
 import { DashboardStats, Activity } from '../types';
-import { GetDashboard, GetActivities} from '../../wailsjs/go/main/App'
 import toast from 'react-hot-toast';
+import { dashboard } from '../services/api';
 
 export function useDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -13,11 +13,11 @@ export function useDashboard() {
     setLoading(true);
     setError(null);
     try {
-      const data = await GetDashboard();
+      const data = await dashboard.getStats();
       setStats(data);
-    } catch (err) {
-      setError(err as string);
-      toast.error(err);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -27,12 +27,11 @@ export function useDashboard() {
     setLoading(true);
     setError(null);
     try {
-      const data = await GetActivities();
+      const data = await dashboard.getActivities();
       setActivities(data);
-      console.log(data);
-    } catch (err) {
-      setError(err as string);
-      toast.error(err);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }

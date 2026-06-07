@@ -1,11 +1,11 @@
 <h1>
-  <img src="build/appicon.png" alt="ActioLift Logo" width="32" height="32" style="vertical-align: middle;">
-  ActioLift - POS (Point of Sale) para Gimnasio
+  <img src="build/appicon.png" alt="AbbyGym Logo" width="32" height="32" style="vertical-align: middle;">
+  AbbyGym - POS (Point of Sale) para Gimnasio
 </h1>
 
 ## 📋 Descripción del Proyecto
 
-ActioLift es un sistema integral de **Punto de Venta (POS)** especializado para la gestión de gimnasios y centros fitness. La aplicación permite administrar de manera eficiente clientes, productos, membresías, suscripciones, ventas y generar reportes detallados del rendimiento del negocio.
+AbbyGym es un sistema integral de **Punto de Venta (POS)** especializado para la gestión de gimnasios y centros fitness. La aplicación permite administrar de manera eficiente clientes, productos, membresías, suscripciones, ventas y generar reportes detallados del rendimiento del negocio.
 
 ### ✨ Características Principales
 
@@ -116,7 +116,7 @@ sudo dnf install gcc gcc-c++
 ### 1. Clonar el Repositorio
 ```bash
 git clone <url-del-repositorio>
-cd ActioLift
+cd AbbyGym
 ```
 
 ### 2. Verificar Dependencias del Sistema
@@ -292,4 +292,4 @@ Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](L
 
 ---
 
-**¡Gracias por usar ActioLift! 💪🏋️‍♂️**
+**¡Gracias por usar AbbyGym! 💪🏋️‍♂️**

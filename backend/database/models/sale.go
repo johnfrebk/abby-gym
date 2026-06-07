@@ -6,10 +6,10 @@ import (
 
 type Sale struct {
 	ID        uint           `gorm:"primaryKey"`
-	ClientID  uint           `gorm:"not null;index"`
+	ClientID  uint           `gorm:"not null;index:idx_sale_client_id"`
 	Total     float64        `gorm:"not null"`
-	
-	CreatedAt time.Time
+
+	CreatedAt time.Time      `gorm:"index:idx_sale_created_at"`
 	UpdatedAt time.Time
 
 	Client      Client         `gorm:"foreignKey:ClientID"`

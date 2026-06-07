@@ -24,11 +24,6 @@ func (c *Client) Validate() error {
 			return errors.New("el email no es válido")
 		}
 	}
-	if c.DNI != "" {
-		if len(c.DNI) != 10 {
-			return errors.New("el DNI debe tener 10 dígitos")
-		}
-	}
 	if c.Phone != "" {
 		if len(c.Phone) < 9 {
 			return errors.New("el teléfono no es válido")

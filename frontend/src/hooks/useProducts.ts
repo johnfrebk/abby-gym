@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Product, ProductForm } from '../types';
-import { GetAllProducts, DeleteProduct, SaveProduct, UpdateProduct } from '../../wailsjs/go/main/App'
 import toast from 'react-hot-toast';
+import { products } from '../services/api';
 
 export function useProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [productList, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,12 +12,11 @@ export function useProducts() {
     setLoading(true);
     setError(null);
     try {
-      const data = await GetAllProducts();
-      console.log(data);
+      const data = await products.getAll();
       setProducts(data);
-    } catch (err) {
-      setError(err as string);
-      toast.error(err);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -25,39 +24,36 @@ export function useProducts() {
 
   const create = async (productData: ProductForm): Promise<boolean> => {
     try {
-      await SaveProduct(productData);
+      await products.create(productData);
       toast.success('Producto creado exitosamente');
       return true;
-    } catch (err) {
-      setError(err as string);
-      toast.error(err);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
       return false;
     }
   };
 
   const update = async (id: number, productData: ProductForm): Promise<boolean> => {
     try {
-      await UpdateProduct({
-        id: id,
-        ...productData
-      });
+      await products.update(id, productData);
       toast.success('Producto actualizado exitosamente');
       return true;
-    } catch (err) {
-      setError(err as string);
-      toast.error(err);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
       return false;
     }
   };
 
   const remove = async (id: number): Promise<boolean> => {
     try {
-      await DeleteProduct({id: id});
+      await products.remove(id);
       toast.success('Producto eliminado exitosamente');
       return true;
-    } catch (err) {
-      setError(err as string);
-      toast.error(err);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
       return false;
     }
   };
@@ -67,7 +63,7 @@ export function useProducts() {
   }, []);
 
   return {
-    products,
+    products: productList,
     loading,
     error,
     getAll,

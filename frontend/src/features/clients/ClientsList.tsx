@@ -4,9 +4,10 @@ import { useClients } from '../../hooks/useClients';
 import { Edit, Trash2, Search, Plus } from 'lucide-react';
 import ClientForm from './ClientForm';
 import ConfirmationModal from '../../components/UI/ConfirmationModal';
+import Pagination from '../../components/UI/Pagination';
 
 export default function ClientsList() {
-  const { clients, loading, remove, getAll } = useClients();
+  const { clients, loading, page, totalPages, total, fetchPage, remove, getAll } = useClients();
   const [searchTerm, setSearchTerm] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingClient, setEditingClient] = useState<Client | undefined>();
@@ -19,8 +20,8 @@ export default function ClientsList() {
   const filteredClients = clients.filter(client =>
     client.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.dni.includes(searchTerm) ||
-    client.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (client.documento || '').includes(searchTerm) ||
+    (client.email || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (client: Client) => {
@@ -90,7 +91,7 @@ export default function ClientsList() {
                   Cliente
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  DNI
+                  Documento
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Email
@@ -115,7 +116,7 @@ export default function ClientsList() {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {client.dni || '-'}
+                    {client.documento || '-'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {client.email || '-'}
@@ -155,12 +156,19 @@ export default function ClientsList() {
         )}
       </div>
 
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        total={total}
+        onPageChange={fetchPage}
+      />
+
       {showForm && (
         <ClientForm
           client={editingClient}
           onClose={handleCloseForm}
           onSuccess={async () => {
-            await getAll();          
+            await fetchPage(page);
           }}
         />
       )}

@@ -7,6 +7,6 @@ type ClientResponse struct {
     LastName         string    `json:"last_name"`
     Email            string    `json:"email"`
     Phone            string    `json:"phone"`
-    DNI              string    `json:"dni"`
+    DNI              string    `json:"documento"`
     RegistrationDate string     `json:"registration_date"`
 }

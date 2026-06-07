@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Sale, SaleForm } from '../types';
 import toast from 'react-hot-toast';
-import { SaveSale, GetAllSales, DeleteSale, UpdateSale } from '../../wailsjs/go/main/App'
-import { save_sale, update_sale } from '../../wailsjs/go/models';
+import { sales } from '../services/api';
+
 export function useSales() {
-  const [sales, setSales] = useState<Sale[]>([]);
+  const [salesList, setSales] = useState<Sale[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,12 +12,11 @@ export function useSales() {
     setLoading(true);
     setError(null);
     try {
-      const data = await GetAllSales();
-      console.log(data);
+      const data = await sales.getAll();
       setSales(data);
-    } catch (err) {
-      setError(err as string);
-      toast.error(err);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -25,41 +24,39 @@ export function useSales() {
 
   const create = async (saleData: SaleForm): Promise<boolean> => {
     try {
-      await SaveSale(saleData as save_sale.SaveSaleRequest)
+      await sales.create(saleData);
       toast.success('Venta registrada exitosamente');
       return true;
-    } catch (err) {
-      setError(err as string);
-      toast.error(err);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
       return false;
     }
   };
 
   const update = async (id: number, saleData: Partial<Sale>): Promise<boolean> => {
     try {
-      const updateData = new update_sale.UpdateSaleRequest();
-      updateData.id = id;
-      updateData.client_id = saleData.client_id!;
-      updateData.details = saleData.details!;
-      
-      await UpdateSale(updateData as update_sale.UpdateSaleRequest);
+      await sales.update(id, {
+        client_id: saleData.client_id!,
+        details: saleData.details!,
+      });
       toast.success('Venta actualizada exitosamente');
       return true;
-    } catch (err) {
-      setError(err as string);
-      toast.error(err);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
       return false;
     }
   };
 
   const remove = async (id: number): Promise<boolean> => {
     try {
-      await DeleteSale({id: id});
+      await sales.remove(id);
       toast.success('Venta eliminada exitosamente');
       return true;
-    } catch (err) {
-      setError(err as string);
-      toast.error(err);
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message);
       return false;
     }
   };
@@ -69,7 +66,7 @@ export function useSales() {
   }, []);
 
   return {
-    sales,
+    sales: salesList,
     loading,
     error,
     getAll,

@@ -1,5 +1,6 @@
-import { Users, Package, CreditCard, Calendar, BarChart3, Dumbbell, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Users, Package, CreditCard, Calendar, BarChart3, Dumbbell, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
 import { useState } from 'preact/hooks';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface SidebarProps {
   activeSection: string;
@@ -17,6 +18,7 @@ const menuItems = [
 
 export default function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const { logout, user } = useAuth();
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -60,12 +62,12 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
               <div className="w-10 h-10 backdrop-blur-xl bg-white/20 rounded-2xl flex items-center justify-center shadow-xl border border-white/20">
                 <img 
                   src="/favicon.png" 
-                  alt="Icono ActioLift" 
+                  alt="Icono AbbyGym" 
                   className="w-6 h-6 object-contain" 
                 />
               </div>
               <div>
-                <h1 className="text-xl font-bold bg-gradient-to-r from-white via-gray-100 to-blue-200 bg-clip-text text-transparent drop-shadow-lg">ActioLift</h1>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-white via-gray-100 to-blue-200 bg-clip-text text-transparent drop-shadow-lg">AbbyGym</h1>
                 <p className="text-xs text-white/80 font-medium backdrop-blur-sm bg-white/10 px-2 py-0.5 rounded-full border border-white/20 inline-block mt-1">Gestión de gimnasio</p>
               </div>
             </div>
@@ -126,64 +128,33 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
       {/* Footer with glassmorphism */}
       <div className="p-4 border-t border-white/10">
         {!isCollapsed ? (
-          <div className="transition-opacity duration-300 opacity-100">
+          <div className="transition-opacity duration-300 opacity-100 space-y-2">
             <div className="backdrop-blur-sm bg-white/5 rounded-2xl p-3 border border-white/10">
               <div className="text-xs text-white/70 space-y-1 text-center">
-                <p className="font-medium text-white/90">Versión 1.0.3</p>
-                <p className="text-white/60">© 2025 ActioMeta</p>
+                <p className="font-medium text-white/90 truncate">{user?.name || 'Usuario'}</p>
+                <p className="text-white/60 truncate">{user?.email || ''}</p>
               </div>
             </div>
+            <button
+              onClick={logout}
+              className="w-full flex items-center justify-center gap-2 py-2 px-3 backdrop-blur-sm bg-red-500/20 hover:bg-red-500/40 rounded-2xl border border-red-500/30 text-red-200 text-sm transition-all duration-300 hover:scale-105"
+            >
+              <LogOut className="w-4 h-4" />
+              Cerrar sesion
+            </button>
           </div>
         ) : (
-          <div className="w-8 h-8 backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl flex items-center justify-center mx-auto transition-all duration-300 hover:bg-white/20">
-            <div className="w-2 h-2 bg-white/60 rounded-full"></div>
-          </div>
+          <button
+            onClick={logout}
+            className="w-8 h-8 backdrop-blur-xl bg-red-500/20 hover:bg-red-500/40 border border-red-500/30 rounded-2xl flex items-center justify-center mx-auto transition-all duration-300 hover:scale-110"
+            title="Cerrar sesion"
+          >
+            <LogOut className="w-4 h-4 text-red-200" />
+          </button>
         )}
       </div>
       </div>
       
-      {/* CSS Animations */}
-      <style jsx>{`
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-        }
-        
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        
-        .animation-delay-1000 {
-          animation-delay: 1s;
-        }
-        
-        .animation-delay-3000 {
-          animation-delay: 3s;
-        }
-        
-        .animate-spin-slow {
-          animation: spin 3s linear infinite;
-        }
-        
-        @keyframes spin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
     </div>
   );
 }

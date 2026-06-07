@@ -5,6 +5,6 @@ type SaveClientRequest struct {
     LastName         string    `json:"last_name"`
     Email            string    `json:"email,omitempty"`
     Phone            string    `json:"phone,omitempty"`
-    DNI              string    `json:"dni,omitempty"`
+    DNI              string    `json:"documento,omitempty"`
     RegistrationDate string     `json:"registration_date"`
 }

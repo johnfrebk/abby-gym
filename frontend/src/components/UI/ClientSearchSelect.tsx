@@ -24,7 +24,7 @@ export default function ClientSearchSelect({
   
   const filteredClients = clients.filter(client =>
     `${client.first_name} ${client.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.dni.includes(searchTerm) ||
+    client.documento.includes(searchTerm) ||
     client.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -58,7 +58,7 @@ export default function ClientSearchSelect({
           <Search className="absolute left-3 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            value={selectedClient ? `${selectedClient.first_name} ${selectedClient.last_name} - ${selectedClient.dni}` : searchTerm}
+            value={selectedClient ? `${selectedClient.first_name} ${selectedClient.last_name} - ${selectedClient.documento}` : searchTerm}
             onChange={(e) => {
               setSearchTerm((e.target as HTMLInputElement).value);
               setIsOpen(true);
@@ -100,7 +100,7 @@ export default function ClientSearchSelect({
                     {client.first_name} {client.last_name}
                   </p>
                   <p className="text-sm text-gray-500">
-                    DNI: {client.dni} • {client.email}
+                    Documento: {client.documento} • {client.email}
                   </p>
                 </div>
               </button>
