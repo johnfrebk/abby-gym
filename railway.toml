@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "cd frontend && npm install && npm run build && cd .. && go build -o abbygym"
+buildCommand = "npm run build && go build -o abbygym"
 
 [deploy]
 startCommand = "./abbygym"
@@ -8,6 +8,3 @@ healthcheckPath = "/api/dashboard"
 restartPolicyType = "on_failure"
 
 [volumes]
-# Persist SQLite database across deploys
-# Add a volume via Railway dashboard: /data
-# Then set DB_PATH env var to: /data/GYM.db
