@@ -34,24 +34,18 @@ func main() {
 	apiRouter := api.NewRouter()
 
 	var staticFS http.Handler
-	if _, err := os.Stat("frontend/dist"); err == nil {
-		sub, err := fs.Sub(frontendAssets, "frontend/dist")
-		if err != nil {
-			log.Fatal("Error al leer assets:", err)
-		}
-		staticFS = http.FileServer(http.FS(&spaFS{sub: sub}))
+	sub, err := fs.Sub(frontendAssets, "frontend/dist")
+	if err != nil {
+		log.Fatal("Error al leer assets:", err)
 	}
+	staticFS = http.FileServer(http.FS(&spaFS{sub: sub}))
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/api/") {
 			apiRouter.ServeHTTP(w, r)
 			return
 		}
-		if staticFS != nil {
-			staticFS.ServeHTTP(w, r)
-		} else {
-			apiRouter.ServeHTTP(w, r)
-		}
+		staticFS.ServeHTTP(w, r)
 	})
 
 	port := os.Getenv("PORT")
