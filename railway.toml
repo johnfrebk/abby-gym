@@ -1,7 +1,3 @@
-[build]
-builder = "nixpacks"
-buildCommand = "npm run build && go build -o abbygym"
-
 [deploy]
 startCommand = "./abbygym"
 healthcheckPath = "/api/dashboard"
