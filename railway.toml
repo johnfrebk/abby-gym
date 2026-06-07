@@ -1,6 +1,0 @@
-[deploy]
-startCommand = "./abbygym"
-healthcheckPath = "/api/dashboard"
-restartPolicyType = "on_failure"
-
-[volumes]
